@@ -6,15 +6,12 @@ import java.util.List;
 
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.internal.info.MigrationInfoDumper;
-import org.flywaydb.core.internal.util.logging.Log;
-import org.flywaydb.core.internal.util.logging.LogFactory;
+import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.spi.StringArrayOptionHandler;
 
 public class FlywayTest {
-    private static final Log LOG = LogFactory.getLog(FlywayTest.class);
-
     @Option(name = "-h", usage = "-h localhost", aliases = "--host")
     private String host = "localhost";
     @Option(name = "-P", usage = "-P 3306", aliases = "--port")
@@ -48,8 +45,8 @@ public class FlywayTest {
             parser.parseArgument(args);
 
             if (debug) {
-                LOG.info(String.format("arguments is host=%s, port=%s user=%s password=%s database=%s " +
-                        "stable-locations=[%s] development-locations=[%s] command=%s debug=%s",
+                System.out.printf(String.format("arguments is host=%s, port=%s user=%s password=%s database=%s " +
+                        "stable-locations=[%s] development-locations=[%s] command=%s debug=%s\n",
                     host, port, user, password, database,
                     String.join(",", stableLocations), String.join(",", developmentLocations), command, debug));
             }
@@ -71,7 +68,7 @@ public class FlywayTest {
                 flyway.clean();
                 break;
             case INFO:
-                LOG.info(System.lineSeparator() + MigrationInfoDumper.dumpToAsciiTable(flyway.info().all()));
+                System.out.println(System.lineSeparator() + MigrationInfoDumper.dumpToAsciiTable(flyway.info().all()));
                 break;
             case INIT:
                 flyway.init();
@@ -88,8 +85,11 @@ public class FlywayTest {
             default:
                 throw new IllegalArgumentException("not found command");
             }
+        } catch (CmdLineException e) {
+            parser.printUsage(System.err);
+            return 1;
         } catch (Exception e) {
-            LOG.error(String.format("An error occurred. %s", e.getMessage()), e);
+            System.err.printf(String.format("An error occurred. %s", e.getMessage()));
             return 1;
         }
         return 0;
