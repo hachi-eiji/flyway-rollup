@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.flywaydb.core.Flyway;
+import org.flywaydb.core.FlywayExtend;
 import org.flywaydb.core.internal.info.MigrationInfoDumper;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -51,7 +51,7 @@ public class FlywayTest {
                     String.join(",", stableLocations), String.join(",", developmentLocations), command, debug));
             }
 
-            Flyway flyway = new Flyway();
+            FlywayExtend flyway = new FlywayExtend();
 
             List<String> locations = new ArrayList();
             locations.addAll(Arrays.asList(stableLocations));
@@ -79,6 +79,9 @@ public class FlywayTest {
             case REPAIR:
                 flyway.repair();
                 break;
+            case ROLLUP:
+                flyway.rollup(stableLocations, developmentLocations);
+                break;
             case VALIDATE:
                 flyway.validate();
                 break;
@@ -89,7 +92,7 @@ public class FlywayTest {
             parser.printUsage(System.err);
             return 1;
         } catch (Exception e) {
-            System.err.printf(String.format("An error occurred. %s", e.getMessage()));
+            System.err.printf(String.format("An error occurred. %s\n%s\n", e.getMessage(), e.getStackTrace()[0]));
             return 1;
         }
         return 0;
@@ -102,6 +105,6 @@ public class FlywayTest {
         MIGRATE,
         REPAIR,
         VALIDATE,
-
+        ROLLUP;
     }
 }
