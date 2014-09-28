@@ -30,8 +30,8 @@
                     <user>test</user>
                     <password>test</password>
                     <locations>
-                        <location>filesystem:db/migration/v1</location>
-                        <location>filesystem:db/migration/v2</location>
+                        <location>filesystem:db/migration/01_stable</location>
+                        <location>filesystem:db/migration/02_development</location>
                     </locations>
                     <validateOnMigrate>false</validateOnMigrate>
                 </configuration>
@@ -49,9 +49,9 @@
                         <argument>-p</argument>
                         <argument>test</argument>
                         <argument>-s</argument>
-                        <argument>filesystem:db/migration/v1</argument>
+                        <argument>filesystem:db/migration/01_stable</argument>
                         <argument>-D</argument>
-                        <argument>filesystem:db/migration/v2</argument>
+                        <argument>filesystem:db/migration/02_development</argument>
                         <argument>-d</argument>
                         <argument>test</argument>
                         <argument>-P</argument>
