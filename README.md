@@ -1,6 +1,28 @@
 # flyway-rollup
 
-implments rollup feature at Flyway
+implementation rollup feature at Flyway
+
+## How to use
+
+1. checkout this repository
+2. ```mvn exec:java``` or  ``` exec:java -Dmain.class=com.hachiyae.flyway.FlywayMain -Dexec.args=-h ```
+
+### options
+
+option | description
+-------|-----------
+-h | database host
+-P | database port
+-d | database name
+-u | database user
+-p | database password
+-s | stable script directories
+-D | development script directories
+-c | migrate command(flyway default command and rollup, dev_clean)
+--encode | flyway encode
+-X | debug
+-o | rollup file description
+-h | help
 
 ## What's flyway-rollup
 Flywayは使いやすいマイグレーションツールだが、
