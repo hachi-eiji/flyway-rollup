@@ -34,8 +34,8 @@ public class FlywayMain {
     private String encode = "utf8";
     @Option(name = "-X", usage = "-X")
     private boolean debug;
-    @Option(name = "-o", usage = "-o rollup", aliases = "--rollup-file")
-    private String rollupFileName = "rollup";
+    @Option(name = "-o", usage = "-o rollup", aliases = "--output-description")
+    private String outputDescription = "rollup";
 
     public static void main(String[] args) {
         System.exit(new FlywayMain().execute(args));
@@ -60,7 +60,7 @@ public class FlywayMain {
             locations.addAll(Arrays.asList(developmentLocations));
             flyway.setStableLocations(stableLocations);
             flyway.setDevelopmentLocations(developmentLocations);
-            flyway.setRollupFileName(rollupFileName);
+            flyway.setOutputDescription(outputDescription);
 
             flyway.setDataSource(String.format("jdbc:mysql://%s:%s/%s", host, port, database), user, password);
             if (!locations.isEmpty()) {

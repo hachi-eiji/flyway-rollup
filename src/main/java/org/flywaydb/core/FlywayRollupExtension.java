@@ -25,7 +25,7 @@ import static java.nio.file.StandardOpenOption.*;
 public class FlywayRollupExtension extends Flyway {
     private String[] developmentLocations;
     private String[] stableLocations;
-    private String rollupFileName = "rollup";
+    private String outputDescription = "rollup";
 
     /**
      * remove clean development record in schema_table
@@ -106,7 +106,7 @@ public class FlywayRollupExtension extends Flyway {
                 // ディレクトリ毎の処理.
                 final List<Map<String, String>> finalSchemaVersions = schemaVersions;
                 stablesDirs.stream().forEach(dir -> {
-                    Path tmp = Paths.get(dir.getParent().toString(), rollupFileName); // 一時ファイル
+                    Path tmp = Paths.get(dir.getParent().toString(), outputDescription); // 一時ファイル
                     String lastVersion = null;
                     try (BufferedWriter bw = Files.newBufferedWriter(tmp, CREATE, TRUNCATE_EXISTING);
                         DirectoryStream<Path> directoryStream = Files.newDirectoryStream(dir)) {
@@ -137,7 +137,7 @@ public class FlywayRollupExtension extends Flyway {
                             }
                             Files.delete(file);
                         }
-                        Path target = Paths.get(dir.toString(), getSqlMigrationPrefix() + lastVersion + "__" + rollupFileName + getSqlMigrationSuffix());
+                        Path target = Paths.get(dir.toString(), getSqlMigrationPrefix() + lastVersion + "__" + outputDescription + getSqlMigrationSuffix());
                         Files.move(tmp, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
                     } catch (IOException e) {
                         throw new FlywayException("copy error", e);
@@ -174,11 +174,11 @@ public class FlywayRollupExtension extends Flyway {
         this.stableLocations = stableLocations;
     }
 
-    public String getRollupFileName() {
-        return rollupFileName;
+    public String getOutputDescription() {
+        return outputDescription;
     }
 
-    public void setRollupFileName(String rollupFileName) {
-        this.rollupFileName = rollupFileName;
+    public void setOutputDescription(String outputDescription) {
+        this.outputDescription = outputDescription;
     }
 }
