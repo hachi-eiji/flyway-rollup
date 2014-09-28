@@ -33,6 +33,7 @@
                         <location>filesystem:db/migration/v1</location>
                         <location>filesystem:db/migration/v2</location>
                     </locations>
+                    <validateOnMigrate>false</validateOnMigrate>
                 </configuration>
             </plugin>
 
@@ -41,7 +42,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.3.2</version>
                 <configuration>
-                    <mainClass>com.hachiyae.flyway.FlywayTest</mainClass>
+                    <mainClass>com.hachiyae.flyway.FlywayMain</mainClass>
                     <arguments>
                         <argument>-u</argument>
                         <argument>test</argument>

@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.flywaydb.core.FlywayExtend;
+import org.flywaydb.core.FlywayRollupExtension;
 import org.flywaydb.core.internal.info.MigrationInfoDumper;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.spi.StringArrayOptionHandler;
 
-public class FlywayTest {
+public class FlywayMain {
     @Option(name = "-h", usage = "-h localhost", aliases = "--host")
     private String host = "localhost";
     @Option(name = "-P", usage = "-P 3306", aliases = "--port")
@@ -32,11 +32,13 @@ public class FlywayTest {
     /** optional * */
     @Option(name = "--encode", usage = "--encode utf8")
     private String encode = "utf8";
-    @Option(name = "-X", usage = "-X", aliases = "--debug")
+    @Option(name = "-X", usage = "-X")
     private boolean debug;
+    @Option(name = "-o", usage = "-o rollup", aliases = "--rollup-file")
+    private String rollupFileName = "rollup";
 
     public static void main(String[] args) {
-        System.exit(new FlywayTest().execute(args));
+        System.exit(new FlywayMain().execute(args));
     }
 
     private int execute(String[] args) {
@@ -51,11 +53,14 @@ public class FlywayTest {
                     String.join(",", stableLocations), String.join(",", developmentLocations), command, debug));
             }
 
-            FlywayExtend flyway = new FlywayExtend();
+            FlywayRollupExtension flyway = new FlywayRollupExtension();
 
-            List<String> locations = new ArrayList();
+            List<String> locations = new ArrayList<>();
             locations.addAll(Arrays.asList(stableLocations));
             locations.addAll(Arrays.asList(developmentLocations));
+            flyway.setStableLocations(stableLocations);
+            flyway.setDevelopmentLocations(developmentLocations);
+            flyway.setRollupFileName(rollupFileName);
 
             flyway.setDataSource(String.format("jdbc:mysql://%s:%s/%s", host, port, database), user, password);
             if (!locations.isEmpty()) {
@@ -80,7 +85,10 @@ public class FlywayTest {
                 flyway.repair();
                 break;
             case ROLLUP:
-                flyway.rollup(stableLocations, developmentLocations);
+                flyway.rollup();
+                break;
+            case DEV_CLEAN:
+                flyway.cleanDevelopment();
                 break;
             case VALIDATE:
                 flyway.validate();
@@ -105,6 +113,7 @@ public class FlywayTest {
         MIGRATE,
         REPAIR,
         VALIDATE,
-        ROLLUP;
+        ROLLUP,
+        DEV_CLEAN
     }
 }
