@@ -48,4 +48,4 @@ option | description
 
 ## License
 
-See [License](License)
+See [License](LICENSE)
