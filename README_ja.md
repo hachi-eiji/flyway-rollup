@@ -2,8 +2,6 @@
 
 implementation rollup feature at Flyway
 
-- [Japanese](README_ja.md)
-
 ## How to use
 
 1. checkout this repository
@@ -11,16 +9,12 @@ implementation rollup feature at Flyway
 
 ## What's flyway-rollup
 
-1. Rollup SQL script files in specific directory.
-2. delete specific record in schme_version tables.
+Flywayは使いやすいマイグレーションツールだが、
 
+- 開発が進むとファイルが増える。
+- flywayのlocationsを安定版(本番で稼働中)と開発用(自分が開発中)でディレクトリを分けた場合に、他の人が安定版ディレクトリにpushした後に,flyway:migrateを叩いてもversion番号が進んでいるため安定版の内容が反映されない
 
-Our team are using [Flyway](http://flywaydb.org/).We create two directies
-
-1. stable
- - other member(branch) created file.
-2. development
- - working directory in feature branch
+という、問題が起きる
 
 ```
 -- db --- migrate -+- stable       -+- V1.0.1__foo.sql
@@ -30,18 +24,12 @@ Our team are using [Flyway](http://flywaydb.org/).We create two directies
                                     +- V2.0.1__bar.sql
 ```
 
-We have two issues.
+そこで,以下の機能を提供する
 
-1. We must keep a lot of SQL files.(V1.0.1__xxx.sql 〜 V1.0.200__yyy.sql !!!)
-2. I can't migrate in development directory, after I merge from other branch.  
-e.g.)
- 1. migrate V2.0.1__bar.sql
- 2. merge from other branch, get V1.0.10__create.sql
- 3. migrate, but don't run V1.0.10__create.sql in my enviroment.
+- 最新の安定バージョンの番号のファイルにこれまで流したスクリプトファイルをマージ
+- schema_versionテーブルの中からdevelopment ディレクトリの中にあるものだけ削除する.
 
-This tool resolve above issues.
-
-### options
+## options
 
 option | description
 -------|-----------
@@ -61,4 +49,3 @@ option | description
 ## License
 
 See [License](License)
-
