@@ -56,7 +56,7 @@ option | description
 --encode | flyway encode
 -X | debug
 -o | rollup file description
--h | help
+--help | print usage
 
 ## License
 

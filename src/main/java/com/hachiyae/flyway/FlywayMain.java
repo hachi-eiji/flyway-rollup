@@ -9,9 +9,12 @@ import org.flywaydb.core.internal.info.MigrationInfoDumper;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
+import org.kohsuke.args4j.OptionHandlerFilter;
 import org.kohsuke.args4j.spi.StringArrayOptionHandler;
 
 public class FlywayMain {
+    @Option(name = "--help", usage = "--help")
+    private boolean help;
     @Option(name = "-h", usage = "-h localhost", aliases = "--host")
     private String host = "localhost";
     @Option(name = "-P", usage = "-P 3306", aliases = "--port")
@@ -97,8 +100,19 @@ public class FlywayMain {
                 throw new IllegalArgumentException("not found command");
             }
         } catch (CmdLineException e) {
-            parser.printUsage(System.err);
-            return 1;
+            if (help) {
+                System.out.printf(
+                    "Usage: %n\tjava %s %s%n",
+                    getClass().getName(), parser.printExample(OptionHandlerFilter.ALL));
+                parser.printUsage(System.out);
+                return 0;
+            } else {
+                System.err.printf(
+                    "Usage: %n\tjava %s %s%n",
+                    getClass().getName(), parser.printExample(OptionHandlerFilter.ALL));
+                parser.printUsage(System.err);
+                return 1;
+            }
         } catch (Exception e) {
             System.err.printf(String.format("An error occurred. %s\n%s\n", e.getMessage(), e.getStackTrace()[0]));
             return 1;
